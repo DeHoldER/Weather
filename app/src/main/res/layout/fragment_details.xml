@@ -5,12 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".view.main.DetailsFragment">
-
-    <ProgressBar
-        android:id="@+id/loading_bar"
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+    tools:context=".view.details.DetailsFragment">
 
     <LinearLayout
         android:id="@+id/info_box"

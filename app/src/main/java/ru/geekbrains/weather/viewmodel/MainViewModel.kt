@@ -23,7 +23,7 @@ class MainViewModel(
     private fun getDataFromLocalSource(isRussian: Boolean) {
         appStateLiveData.value = AppState.Loading
         Thread {
-            sleep(1000)
+            sleep(Random.nextLong(0,1000))
 
             appStateLiveData.postValue(
                 AppState.Success(
