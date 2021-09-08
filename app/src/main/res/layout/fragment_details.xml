@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".view.main.DetailsFragment">
+
+    <ProgressBar
+        android:id="@+id/loading_bar"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+
+    <LinearLayout
+        android:id="@+id/info_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/city_name"
+            style="@style/WeatherDetailsFragmentText.Big"
+            tools:text="Москва" />
+
+        <TextView
+            android:id="@+id/city_coordinates"
+            style="@style/WeatherDetailsFragmentText"
+            tools:text="lt/ln : 65.548, 86.4184" />
+
+        <TextView
+            style="@style/WeatherDetailsFragmentText"
+            android:text="@string/txt_temperature_value" />
+
+        <TextView
+            android:id="@+id/temperature_value"
+            style="@style/WeatherDetailsFragmentText.Big"
+            tools:text="35" />
+
+        <TextView
+            style="@style/WeatherDetailsFragmentText"
+            android:text="@string/txt_temperature_feels_like" />
+
+        <TextView
+            android:id="@+id/temperature_feels_like"
+            style="@style/WeatherDetailsFragmentText.Big"
+            tools:text="28" />
+    </LinearLayout>
+
+
+</LinearLayout>

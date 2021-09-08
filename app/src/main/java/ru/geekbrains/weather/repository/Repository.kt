@@ -4,7 +4,8 @@ import ru.geekbrains.weather.domain.Weather
 
 interface Repository {
 
-    fun getWeatherFromLocal() : Weather
-
     fun getWeatherFromServer() : Weather
+    fun getWeatherFromLocalStorageRus() : List<Weather>
+    fun getWeatherFromLocalStorageWorld() : List<Weather>
+
 }
