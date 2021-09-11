@@ -9,8 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.weather.R
+import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentMainBinding
 import ru.geekbrains.weather.domain.Weather
+import ru.geekbrains.weather.showSnackBarWithResText
+import ru.geekbrains.weather.showSnackBarWithoutAction
 import ru.geekbrains.weather.view.details.DetailsFragment
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.MainViewModel
@@ -80,21 +83,13 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
+                view?.showSnackBarWithResText(R.string.t_success)
             }
             is AppState.Loading -> {
                 binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar
-                    .make(
-                        binding.mainFragmentFAB, getString(R.string.error),
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                    .setAction(getString(R.string.reload)) {
-                        viewModel.getWeatherFromLocalSourceRus()
-                    }
-                    .show()
+                view?.createAndShow("Fail","Reload",{viewModel.getWeatherFromLocalSourceRus()})
             }
         }
     }
