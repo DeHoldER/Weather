@@ -3,6 +3,7 @@ package ru.geekbrains.weather.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import ru.geekbrains.weather.R
+import ru.geekbrains.weather.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainFragment.newInstance())
+                .addToBackStack(null)
                 .commit()
         }
     }

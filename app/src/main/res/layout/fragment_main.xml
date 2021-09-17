@@ -1,52 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context=".view.MainFragment">
+    android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/loading_bar"
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainFragmentRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/info_box"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mainFragmentFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@mipmap/ic_russia"
+        android:tintMode="screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="@dimen/fab_icon_size" />
 
-        <TextView
-            android:id="@+id/city_name"
-            style="@style/WeatherDetailsFragmentText.Big"
-            tools:text="Москва" />
+    <FrameLayout
+        android:id="@+id/mainFragmentLoadingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/loadingBackground"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/city_coordinates"
-            style="@style/WeatherDetailsFragmentText"
-            tools:text="lt/ln : 65.548, 86.4184" />
-
-        <TextView
-            style="@style/WeatherDetailsFragmentText"
-            android:text="@string/txt_temperature_value" />
-
-        <TextView
-            android:id="@+id/temperature_value"
-            style="@style/WeatherDetailsFragmentText.Big"
-            tools:text="35" />
-
-        <TextView
-            style="@style/WeatherDetailsFragmentText"
-            android:text="@string/txt_temperature_feels_like" />
-
-        <TextView
-            android:id="@+id/temperature_feels_like"
-            style="@style/WeatherDetailsFragmentText.Big"
-            tools:text="28" />
-    </LinearLayout>
-
-
-</LinearLayout>
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
