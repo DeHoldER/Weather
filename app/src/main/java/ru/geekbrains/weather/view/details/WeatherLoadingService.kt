@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson

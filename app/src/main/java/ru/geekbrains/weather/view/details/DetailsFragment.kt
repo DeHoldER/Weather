@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.weather.R
+import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.WeatherDTO
+import ru.geekbrains.weather.showSnackBarWithoutAction
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.DetailsViewModel
 
@@ -63,6 +66,7 @@ class DetailsFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun displayWeather(weather: AppState) {
         when (weather) {
             is AppState.DetailSuccess -> {
@@ -83,11 +87,14 @@ class DetailsFragment : Fragment() {
 
             }
             is AppState.Error -> {
+                toggleLoader(true)
                 with(binding) {
-                    toggleLoader()
-                    cityName.text = "Ошибка"
-                    cityCoordinates.text =
+                    errorMessage.text =
                         String.format(getString(R.string.error_message), weather.error)
+                    view?.createAndShow(
+                        "Error",
+                        "Reload",
+                        { viewModel.updateWeather(weatherBundle) })
                 }
             }
             else -> {
