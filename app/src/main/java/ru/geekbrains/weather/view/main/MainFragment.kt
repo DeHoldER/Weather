@@ -9,8 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.weather.R
+import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentMainBinding
 import ru.geekbrains.weather.domain.Weather
+import ru.geekbrains.weather.showSnackBarWithResText
+import ru.geekbrains.weather.showSnackBarWithoutAction
 import ru.geekbrains.weather.view.details.DetailsFragment
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.MainViewModel
@@ -19,28 +22,23 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+
+    private var isDataSetRus: Boolean = true
 
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
+
         override fun onItemViewClick(weather: Weather) {
-            val manager = activity?.supportFragmentManager
-            if (manager != null) {
-                val bundle = Bundle()
-                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
-                manager.beginTransaction()
-                    .replace(R.id.fragment_container, DetailsFragment.newInstance(bundle))
+            activity?.supportFragmentManager?.apply {
+                beginTransaction()
+                    .add(R.id.fragment_container, DetailsFragment.newInstance(Bundle().apply {
+                        putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
+                    }))
                     .addToBackStack(null)
                     .commitAllowingStateLoss()
             }
         }
     })
-
-    override fun onDestroy() {
-        adapter.removeListener()
-        super.onDestroy()
-    }
-
-    private var isDataSetRus: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,16 +48,23 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        adapter.removeListener()
+        super.onDestroy()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.mainFragmentRecyclerView.adapter = adapter
-        binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
-
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.getAppState().observe(viewLifecycleOwner, Observer {
-            renderData(it)
-        })
-        viewModel.getWeatherFromLocalSourceRus()
+        with(binding) {
+            mainFragmentRecyclerView.adapter = adapter
+            mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
+        }
+        with(viewModel) {
+            getAppState().observe(viewLifecycleOwner, Observer {
+                renderData(it)
+            })
+            getWeatherFromLocalSourceRus()
+        }
     }
 
     private fun changeWeatherDataSet() {
@@ -78,21 +83,13 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
+                view?.showSnackBarWithResText(R.string.t_success)
             }
             is AppState.Loading -> {
                 binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar
-                    .make(
-                        binding.mainFragmentFAB, getString(R.string.error),
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                    .setAction(getString(R.string.reload)) {
-                        viewModel.getWeatherFromLocalSourceRus()
-                    }
-                    .show()
+                view?.createAndShow("Fail","Reload",{viewModel.getWeatherFromLocalSourceRus()})
             }
         }
     }
