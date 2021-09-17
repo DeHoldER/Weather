@@ -1,19 +1,30 @@
 package ru.geekbrains.weather.view.details
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
 import ru.geekbrains.weather.domain.Weather
-import kotlin.random.Random
+import ru.geekbrains.weather.domain.WeatherDTO
+import ru.geekbrains.weather.viewmodel.AppState
+import ru.geekbrains.weather.viewmodel.DetailsViewModel
 
 class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var weatherBundle: Weather
+
+    private val viewModel: DetailsViewModel by lazy { ViewModelProvider(this).get(DetailsViewModel::class.java) }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,24 +46,92 @@ class DetailsFragment : Fragment() {
         _binding = null
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // выглядит жутковато, но, как Вы сами сказали - "мы же тут учимся" ))
-        arguments.let { it?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather() }.also { setData(it) }
-    }
 
+        arguments.let { it?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather() }
+            .also { weatherBundle = it }
 
-    private fun setData(weather: Weather) {
-        with(binding) {
-            cityName.text = weather.city.name
-            cityCoordinates.text = String.format(
-                getString(R.string.city_coordinates),
-                weather.city.lat.toString(),
-                weather.city.lon.toString()
-            )
-            temperatureValue.text = weather.temperature.toString()
-            temperatureFeelsLike.text = weather.feelsLike.toString()
+        with(viewModel) {
+            getAppState().observe(viewLifecycleOwner, Observer {
+                displayWeather(it)
+            })
+            updateWeather(weatherBundle)
         }
     }
+
+
+    private fun displayWeather(weather: AppState) {
+        when (weather) {
+            is AppState.DetailSuccess -> {
+                with(binding) {
+                    toggleLoader()
+                    cityName.text = weatherBundle.city.name
+                    cityCoordinates.text = String.format(
+                        getString(R.string.city_coordinates),
+                        weatherBundle.city.lat.toString(),
+                        weatherBundle.city.lon.toString()
+                    )
+                    weatherCondition.text = weather.weatherDTO.fact?.condition
+                    setConditionPicture(weather.weatherDTO.fact?.condition.toString())
+                    temperatureValue.text = weather.weatherDTO.fact?.temp.toString()
+                    temperatureFeelsLike.text = weather.weatherDTO.fact?.feels_like.toString()
+
+                }
+
+            }
+            is AppState.Error -> {
+                with(binding) {
+                    toggleLoader()
+                    cityName.text = "Ошибка"
+                    cityCoordinates.text =
+                        String.format(getString(R.string.error_message), weather.error)
+                }
+            }
+            else -> {
+                toggleLoader(true)
+            }
+        }
+    }
+
+
+    private fun toggleLoader(isLoading: Boolean = false) {
+        with(binding) {
+            if (!isLoading) {
+                infoBox.visibility = View.VISIBLE
+                loadingBar.visibility = View.GONE
+            } else {
+                infoBox.visibility = View.GONE
+                loadingBar.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun setConditionPicture(condition: String) {
+        with(binding.weatherCondition) {
+            when (condition) {
+                "clear" -> {
+                    setBackgroundResource(R.drawable.ic_sunny)
+                    text = ""
+                }
+                "cloudy" -> {
+                    setBackgroundResource(R.drawable.ic_cloudy)
+                    text = ""
+                }
+                "rainy" -> {
+                    setBackgroundResource(R.drawable.ic_rainy)
+                    text = ""
+                }
+                "overcast" -> {
+                    setBackgroundResource(R.drawable.ic_overcast)
+                    text = ""
+                }
+            }
+        }
+
+
+    }
+
 }
