@@ -9,13 +9,10 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
 import ru.geekbrains.weather.domain.Weather
-import ru.geekbrains.weather.domain.WeatherDTO
-import ru.geekbrains.weather.showSnackBarWithoutAction
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.DetailsViewModel
 
@@ -78,10 +75,10 @@ class DetailsFragment : Fragment() {
                         weatherBundle.city.lat.toString(),
                         weatherBundle.city.lon.toString()
                     )
-                    weatherCondition.text = weather.weatherDTO.fact?.condition
-                    setConditionPicture(weather.weatherDTO.fact?.condition.toString())
-                    temperatureValue.text = weather.weatherDTO.fact?.temp.toString()
-                    temperatureFeelsLike.text = weather.weatherDTO.fact?.feels_like.toString()
+                    weatherCondition.text = weather.weatherDTO.weather?.get(0)?.description
+                    weather.weatherDTO.weather?.get(0)?.id?.let { setConditionPicture(it) }
+                    temperatureValue.text = weather.weatherDTO.main?.temp.toString()
+                    temperatureFeelsLike.text = weather.weatherDTO.main?.feels_like.toString()
 
                 }
 
@@ -116,29 +113,19 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun setConditionPicture(condition: String) {
-        with(binding.weatherCondition) {
-            when (condition) {
-                "clear" -> {
-                    setBackgroundResource(R.drawable.ic_sunny)
-                    text = ""
-                }
-                "cloudy" -> {
-                    setBackgroundResource(R.drawable.ic_cloudy)
-                    text = ""
-                }
-                "rainy" -> {
-                    setBackgroundResource(R.drawable.ic_rainy)
-                    text = ""
-                }
-                "overcast" -> {
-                    setBackgroundResource(R.drawable.ic_overcast)
-                    text = ""
-                }
+    private fun setConditionPicture(conditionId: Int) {
+        with(binding.conditionIcon) {
+            conditionMap[conditionId]?.let {
+                setBackgroundResource(it)
             }
         }
-
-
     }
-
 }
+
+
+val conditionMap = mapOf<Int, Int>(
+    505 to R.drawable.ic_rainy,
+    800 to R.drawable.ic_clear,
+    801 to R.drawable.ic_cloudy,
+    804 to R.drawable.ic_overcast,
+)
