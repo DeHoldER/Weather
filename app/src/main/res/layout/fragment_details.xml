@@ -1,38 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context=".view.details.DetailsFragment">
 
     <LinearLayout
-        android:id="@+id/info_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/loadingBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/errorMessage"
+            style="@style/WeatherDetailsFragmentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Error" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/infoBox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/city_name"
+            android:id="@+id/cityName"
+            android:layout_marginBottom="20sp"
             style="@style/WeatherDetailsFragmentText.Big"
             tools:text="Москва" />
 
         <TextView
-            android:id="@+id/city_coordinates"
+            android:visibility="gone"
+            android:id="@+id/cityCoordinates"
             style="@style/WeatherDetailsFragmentText"
             tools:text="lt/ln : 65.548, 86.4184" />
+
+        <ImageView
+            android:id="@+id/condition_Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/weatherCondition"
+            style="@style/WeatherDetailsFragmentText.Big"
+            tools:text="35" />
 
         <TextView
             style="@style/WeatherDetailsFragmentText"
             android:text="@string/txt_temperature_value" />
 
         <TextView
-            android:id="@+id/temperature_value"
+            android:id="@+id/temperatureValue"
             style="@style/WeatherDetailsFragmentText.Big"
             tools:text="35" />
 
@@ -41,10 +72,10 @@
             android:text="@string/txt_temperature_feels_like" />
 
         <TextView
-            android:id="@+id/temperature_feels_like"
+            android:id="@+id/temperatureFeelsLike"
             style="@style/WeatherDetailsFragmentText.Big"
             tools:text="28" />
+
     </LinearLayout>
 
-
-</LinearLayout>
+</FrameLayout>
