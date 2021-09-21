@@ -1,5 +1,9 @@
 package ru.geekbrains.weather.view.details
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,10 +13,11 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
-import ru.geekbrains.weather.domain.Weather
+import ru.geekbrains.weather.domain.*
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.DetailsViewModel
 
@@ -25,6 +30,37 @@ class DetailsFragment : Fragment() {
 
     private val viewModel: DetailsViewModel by lazy { ViewModelProvider(this).get(DetailsViewModel::class.java) }
 
+    // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
+    val localWeather: Weather by lazy {
+        (arguments?.getParcelable(BUNDLE_EXTRA)) ?: Weather()
+    }
+    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let { it ->
+                val weatherDTO = it.getParcelableExtra<WeatherDTO>(DETAILS_LOAD_RESULT_EXTRA)
+                if (weatherDTO != null) {
+                    showWeather(weatherDTO)
+                    toggleLoader()
+                } else {
+                    view?.createAndShow("Fail","Reload",{ intent.getParcelableExtra<WeatherDTO>(DETAILS_LOAD_RESULT_EXTRA)?.let { it1 ->
+                        showWeather(it1)
+                    } })
+                }
+            }
+
+        }
+    }
+    private fun showWeather(weatherDTO: WeatherDTO) {
+
+        with(binding) {
+            cityName.text = localWeather.city.name
+            cityCoordinates.text = "lat ${localWeather.city.lat}\n lon ${localWeather.city.lon}"
+            temperatureValue.text = weatherDTO.main?.temp.toString()
+            temperatureFeelsLike.text = "${weatherDTO.main?.feels_like}"
+            weatherCondition.text = "${weatherDTO.weather?.get(0)?.description}"
+        }
+    }
+    // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,10 +86,17 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         arguments.let { it?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather() }
             .also { weatherBundle = it }
 
+        // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
+        val intent = Intent(requireActivity(), DetailsService::class.java)
+        intent.putExtra(LATITUDE_EXTRA, localWeather.city.lat)
+        intent.putExtra(LONGITUDE_EXTRA, localWeather.city.lon)
+        requireActivity().startService(intent)
+        LocalBroadcastManager.getInstance(requireActivity())
+            .registerReceiver(receiver, IntentFilter(DETAILS_INTENT_FILTER))
+        // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
         with(viewModel) {
             getAppState().observe(viewLifecycleOwner, Observer {
                 displayWeather(it)

@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.geekbrains.weather.domain.DetailsService
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.view.details.WeatherLoadingService
 
@@ -15,6 +16,8 @@ class DetailsViewModel(
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun updateWeather(weather: Weather) {
-        WeatherLoadingService.loadWeather(weather, appStateLiveData)
+        // -------------- ПОСЛЕ ПРОВЕРКИ ЗАМЕНИТЬ --------------- //
+//        WeatherLoadingService.loadWeather(weather, appStateLiveData)
+        DetailsService().loadWeather(weather.city.lat,weather.city.lon)
     }
 }
