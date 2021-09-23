@@ -1,9 +1,5 @@
 package ru.geekbrains.weather.view.details
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,7 +9,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
@@ -30,41 +25,6 @@ class DetailsFragment : Fragment() {
 
     private val viewModel: DetailsViewModel by lazy { ViewModelProvider(this).get(DetailsViewModel::class.java) }
 
-    // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
-    val localWeather: Weather by lazy {
-        (arguments?.getParcelable(BUNDLE_EXTRA)) ?: Weather()
-    }
-    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.let { it ->
-                val weatherDTO = it.getParcelableExtra<WeatherDTO>(DETAILS_LOAD_RESULT_EXTRA)
-                if (weatherDTO != null) {
-                    showWeather(weatherDTO)
-                    toggleLoader()
-                } else {
-                    view?.createAndShow("Fail", "Reload", {
-                        intent.getParcelableExtra<WeatherDTO>(DETAILS_LOAD_RESULT_EXTRA)
-                            ?.let { it1 ->
-                                showWeather(it1)
-                            }
-                    })
-                }
-            }
-
-        }
-    }
-
-    private fun showWeather(weatherDTO: WeatherDTO) {
-
-        with(binding) {
-            cityName.text = localWeather.city.name
-            cityCoordinates.text = "lat ${localWeather.city.lat}\n lon ${localWeather.city.lon}"
-            temperatureValue.text = weatherDTO.main?.temp.toString()
-            temperatureFeelsLike.text = "${weatherDTO.main?.feels_like}"
-            weatherCondition.text = "${weatherDTO.weather?.get(0)?.description}"
-        }
-    }
-    // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,15 +52,6 @@ class DetailsFragment : Fragment() {
 
         arguments.let { it?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather() }
             .also { weatherBundle = it }
-
-        // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
-        val intent = Intent(requireActivity(), DetailsService::class.java)
-        intent.putExtra(LATITUDE_EXTRA, localWeather.city.lat)
-        intent.putExtra(LONGITUDE_EXTRA, localWeather.city.lon)
-        requireActivity().startService(intent)
-        LocalBroadcastManager.getInstance(requireActivity())
-            .registerReceiver(receiver, IntentFilter(DETAILS_INTENT_FILTER))
-        // -------------- ПОСЛЕ ПРОВЕРКИ УДАЛИТЬ --------------- //
         with(viewModel) {
             getAppState().observe(viewLifecycleOwner, Observer {
                 displayWeather(it)
@@ -115,20 +66,20 @@ class DetailsFragment : Fragment() {
         when (weather) {
             is AppState.DetailSuccess -> {
                 with(binding) {
-                    toggleLoader()
                     cityName.text = weatherBundle.city.name
                     cityCoordinates.text = String.format(
                         getString(R.string.city_coordinates),
                         weatherBundle.city.lat.toString(),
                         weatherBundle.city.lon.toString()
                     )
-                    weatherCondition.text = weather.weatherDTO.weather?.get(0)?.description
-                    weather.weatherDTO.weather?.get(0)?.id?.let { setConditionPicture(it) }
-                    temperatureValue.text = weather.weatherDTO.main?.temp.toString()
-                    temperatureFeelsLike.text = weather.weatherDTO.main?.feels_like.toString()
-
+                    with(weather.weather) {
+                        weatherCondition.text = condition
+                        conditionIcon.setBackgroundResource(icon)
+                        temperatureValue.text = temp
+                        temperatureFeelsLike.text = feelsLike
+                    }
                 }
-
+                toggleLoader()
             }
             is AppState.Error -> {
                 toggleLoader(true)
@@ -159,21 +110,4 @@ class DetailsFragment : Fragment() {
             }
         }
     }
-
-    // пока так, в дальнейшем планирую по всем состояниям показывать кастомные картинки
-    private fun setConditionPicture(conditionId: Int) {
-        with(binding.conditionIcon) {
-            conditionMap[conditionId]?.let {
-                setBackgroundResource(it)
-            }
-        }
-    }
 }
-
-
-val conditionMap = mapOf<Int, Int>(
-    505 to R.drawable.ic_rainy,
-    800 to R.drawable.ic_clear,
-    801 to R.drawable.ic_cloudy,
-    804 to R.drawable.ic_overcast,
-)

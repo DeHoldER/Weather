@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import ru.geekbrains.weather.BuildConfig
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.WeatherDTO
+import ru.geekbrains.weather.domain.WeatherDTOConverted
 import ru.geekbrains.weather.viewmodel.AppState
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -47,7 +48,7 @@ object WeatherLoadingService {
                         getLines(bufferedReader),
                         WeatherDTO::class.java
                     )
-                    handler.post { liveData.postValue(AppState.DetailSuccess(weatherDTO)) }
+                    handler.post { liveData.postValue(AppState.DetailSuccess(WeatherDTOConverted(weatherDTO))) }
                 } catch (e: Exception) {
                     Log.e("", "Fail connection", e)
                     e.printStackTrace()
