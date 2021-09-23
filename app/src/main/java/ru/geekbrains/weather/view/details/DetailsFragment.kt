@@ -42,14 +42,18 @@ class DetailsFragment : Fragment() {
                     showWeather(weatherDTO)
                     toggleLoader()
                 } else {
-                    view?.createAndShow("Fail","Reload",{ intent.getParcelableExtra<WeatherDTO>(DETAILS_LOAD_RESULT_EXTRA)?.let { it1 ->
-                        showWeather(it1)
-                    } })
+                    view?.createAndShow("Fail", "Reload", {
+                        intent.getParcelableExtra<WeatherDTO>(DETAILS_LOAD_RESULT_EXTRA)
+                            ?.let { it1 ->
+                                showWeather(it1)
+                            }
+                    })
                 }
             }
 
         }
     }
+
     private fun showWeather(weatherDTO: WeatherDTO) {
 
         with(binding) {
@@ -79,7 +83,7 @@ class DetailsFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+//        _binding = null
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -156,6 +160,7 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    // пока так, в дальнейшем планирую по всем состояниям показывать кастомные картинки
     private fun setConditionPicture(conditionId: Int) {
         with(binding.conditionIcon) {
             conditionMap[conditionId]?.let {

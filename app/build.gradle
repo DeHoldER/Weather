@@ -34,6 +34,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("apikey.properties").newDataInputStream())
+        def apiKey = properties.getProperty("openWeatherApiKey", "")
+        it.buildConfigField "String", "OPEN_WEATHER_API_KEY", apiKey
+    }
 }
 
 dependencies {

@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.gson.Gson
+import ru.geekbrains.weather.BuildConfig
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -14,7 +15,7 @@ import javax.net.ssl.HttpsURLConnection
 const val LATITUDE_EXTRA = "Latitude"
 const val LONGITUDE_EXTRA = "Longitude"
 
-private const val OPEN_WEATHER_API_KEY = "4b552c34f60eb554d5b965a03f98c6f0"
+private const val OPEN_WEATHER_API_KEY = BuildConfig.OPEN_WEATHER_API_KEY //ключ для проверки 4b552c34f60eb554d5b965a03f98c6f0
 
 
 const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
@@ -36,10 +37,10 @@ class DetailsService(name: String = "details") : IntentService(name) {
         Thread {
             val urlConnection = uri.openConnection() as HttpsURLConnection
             urlConnection.requestMethod = "GET"
-            urlConnection.addRequestProperty(
-                "X-Yandex-API-Key",
-                "ceae3d76-b634-4bfd-8ef5-25a327758ae9"
-            )//TODO нужно разобрать вынос в файл
+//            urlConnection.addRequestProperty(
+//                "X-Yandex-API-Key",
+//                "ceae3d76-b634-4bfd-8ef5-25a327758ae9"
+//            )//
             urlConnection.readTimeout = 10000
             val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
             val weatherDTO = Gson().fromJson(reader, WeatherDTO::class.java)

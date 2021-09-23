@@ -8,6 +8,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import ru.geekbrains.weather.BuildConfig
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.WeatherDTO
 import ru.geekbrains.weather.viewmodel.AppState
@@ -18,8 +19,7 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-private const val YANDEX_API_KEY = "955ca124-c433-4c7d-9127-81a6c2a350e4"
-private const val OPEN_WEATHER_API_KEY = "4b552c34f60eb554d5b965a03f98c6f0"
+private const val OPEN_WEATHER_API_KEY = BuildConfig.OPEN_WEATHER_API_KEY //ключ для проверки 4b552c34f60eb554d5b965a03f98c6f0
 
 object WeatherLoadingService {
 
@@ -31,9 +31,7 @@ object WeatherLoadingService {
     @RequiresApi(Build.VERSION_CODES.N)
     fun loadWeather(weather: Weather, liveData: MutableLiveData<AppState>) {
         try {
-//            val uri = URL("https://api.weather.yandex.ru/v2/informers?lat=${weather.city.lat}&lon=${weather.city.lon}")
             val uri = URL("https://api.openweathermap.org/data/2.5/weather?lat=${weather.city.lat}&lon=${weather.city.lon}&units=metric&lang=ru&appid=${OPEN_WEATHER_API_KEY}")
-            // api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
             val handler = Handler(Looper.getMainLooper())
             Thread(Runnable {
@@ -41,10 +39,6 @@ object WeatherLoadingService {
                 try {
                     urlConnection = uri.openConnection() as HttpsURLConnection
                     urlConnection.requestMethod = "GET"
-//                    urlConnection.addRequestProperty(
-//                        "X-Yandex-API-Key",
-//                        YANDEX_API_KEY
-//                    )
                     urlConnection.readTimeout = 10000
                     val bufferedReader =
                         BufferedReader(InputStreamReader(urlConnection.inputStream))
@@ -57,7 +51,6 @@ object WeatherLoadingService {
                 } catch (e: Exception) {
                     Log.e("", "Fail connection", e)
                     e.printStackTrace()
-                    //Обработка ошибки
                     liveData.postValue(AppState.Error(e))
                 } finally {
                     urlConnection.disconnect()
@@ -66,7 +59,7 @@ object WeatherLoadingService {
         } catch (e: MalformedURLException) {
             Log.e("", "Fail URI", e)
             e.printStackTrace()
-            //Обработка ошибки
+            liveData.postValue(AppState.Error(e))
         }
     }
 
