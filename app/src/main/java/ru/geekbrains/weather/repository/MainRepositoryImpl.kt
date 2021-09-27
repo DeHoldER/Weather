@@ -4,7 +4,7 @@ import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.getRussianCities
 import ru.geekbrains.weather.domain.getWorldCities
 
-class RepositoryImpl : Repository {
+class MainRepositoryImpl : MainRepository {
 
     override fun getWeatherFromServer(): Weather = Weather()
 

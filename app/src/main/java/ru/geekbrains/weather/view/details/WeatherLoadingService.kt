@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
@@ -25,12 +24,8 @@ private const val OPEN_WEATHER_API_KEY = BuildConfig.OPEN_WEATHER_API_KEY //кл
 object WeatherLoadingService {
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun getLines(reader: BufferedReader): String {
-        return reader.lines().collect(Collectors.joining("\n"))
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun loadWeather(weather: Weather, liveData: MutableLiveData<AppState>) {
+    fun nativeRequest(weather: Weather, liveData: MutableLiveData<AppState>) {
+        liveData.value = AppState.Loading
         try {
             val uri = URL("https://api.openweathermap.org/data/2.5/weather?lat=${weather.city.lat}&lon=${weather.city.lon}&units=metric&lang=ru&appid=${OPEN_WEATHER_API_KEY}")
 
@@ -62,6 +57,11 @@ object WeatherLoadingService {
             e.printStackTrace()
             liveData.postValue(AppState.Error(e))
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getLines(reader: BufferedReader): String {
+        return reader.lines().collect(Collectors.joining("\n"))
     }
 
 }

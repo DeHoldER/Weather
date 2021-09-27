@@ -1,11 +1,7 @@
 package ru.geekbrains.weather.domain
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 import ru.geekbrains.weather.R
 import kotlin.math.roundToInt
-
-// -------------- ПОСЛЕ ПРОВЕРКИ УБРАТЬ Parcelable --------------- //
 
 // не очень понял каких комментариев нужно добавить, т.к. API по-сути конструктивно мало чем отличается от яндекса
 // во всяком случае из того набора возможностей, которые я планирую использовать
@@ -22,7 +18,6 @@ data class FactDTO(
     val feels_like: Double?,
     val condition: String?
 )
-
 
 // собственно, condition (он же weather в респонсе)
 // помимо id и description приходит параметр main, который хранит базовое описание погоды. но мы же не ищем лёгких путей,
@@ -42,7 +37,7 @@ data class WeatherDTOConverted(
     var feelsLike: String = roundTemp(weatherDTO.main?.feels_like),
 )
 
-val conditionMap = mapOf<Int, Int>(
+private val conditionMap = mapOf<Int, Int>(
     0 to R.drawable.empty_pixel,
     505 to R.drawable.ic_rainy,
     800 to R.drawable.ic_clear,

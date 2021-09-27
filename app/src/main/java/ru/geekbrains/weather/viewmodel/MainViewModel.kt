@@ -2,15 +2,12 @@ package ru.geekbrains.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.geekbrains.weather.domain.Weather
-import ru.geekbrains.weather.repository.Repository
-import ru.geekbrains.weather.repository.RepositoryImpl
-import java.lang.Thread.sleep
-import kotlin.random.Random
+import ru.geekbrains.weather.repository.MainRepository
+import ru.geekbrains.weather.repository.MainRepositoryImpl
 
 class MainViewModel(
     private val appStateLiveData: MutableLiveData<AppState> = MutableLiveData(),
-    private val repositoryImpl: Repository = RepositoryImpl()
+    private val mainRepositoryImpl: MainRepository = MainRepositoryImpl()
 ) : ViewModel() {
 
     fun getAppState() = appStateLiveData
@@ -24,9 +21,9 @@ class MainViewModel(
         appStateLiveData.postValue(
             AppState.Success(
                 if (isRussian)
-                    repositoryImpl.getWeatherFromLocalStorageRus()
+                    mainRepositoryImpl.getWeatherFromLocalStorageRus()
                 else
-                    repositoryImpl.getWeatherFromLocalStorageWorld()
+                    mainRepositoryImpl.getWeatherFromLocalStorageWorld()
             )
         )
     }

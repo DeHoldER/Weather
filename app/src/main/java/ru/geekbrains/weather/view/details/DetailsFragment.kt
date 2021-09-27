@@ -2,17 +2,17 @@ package ru.geekbrains.weather.view.details
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
-import ru.geekbrains.weather.domain.*
+import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.DetailsViewModel
 
@@ -43,13 +43,12 @@ class DetailsFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-//        _binding = null
+        _binding = null
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         arguments.let { it?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather() }
             .also { weatherBundle = it }
         with(viewModel) {
@@ -72,7 +71,7 @@ class DetailsFragment : Fragment() {
                         weatherBundle.city.lat.toString(),
                         weatherBundle.city.lon.toString()
                     )
-                    with(weather.weather) {
+                    with(weather.weatherData) {
                         weatherCondition.text = condition
                         conditionIcon.setBackgroundResource(icon)
                         temperatureValue.text = temp
