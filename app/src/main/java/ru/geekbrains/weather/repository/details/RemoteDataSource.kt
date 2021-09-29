@@ -1,7 +1,6 @@
-package ru.geekbrains.weather.repository
+package ru.geekbrains.weather.repository.details
 
 import com.google.gson.GsonBuilder
-import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.geekbrains.weather.BuildConfig

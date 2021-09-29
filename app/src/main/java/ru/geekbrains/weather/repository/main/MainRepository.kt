@@ -1,4 +1,4 @@
-package ru.geekbrains.weather.repository
+package ru.geekbrains.weather.repository.main
 
 import ru.geekbrains.weather.domain.Weather
 

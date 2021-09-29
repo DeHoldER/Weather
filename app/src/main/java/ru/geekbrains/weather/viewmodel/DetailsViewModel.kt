@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.WeatherDTO
 import ru.geekbrains.weather.domain.WeatherDTOConverted
-import ru.geekbrains.weather.repository.RemoteDataSource
+import ru.geekbrains.weather.repository.details.DetailsRepositoryImpl
+import ru.geekbrains.weather.repository.details.RemoteDataSource
 import ru.geekbrains.weather.utils.REQUEST_ERROR
 import ru.geekbrains.weather.utils.SERVER_ERROR
-import ru.geekbrains.weather.view.details.WeatherLoadingService
 
 class DetailsViewModel(
     private val appStateLiveData: MutableLiveData<AppState> = MutableLiveData(),
@@ -23,8 +23,8 @@ class DetailsViewModel(
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun updateWeather(weather: Weather) {
-//        WeatherLoadingService.nativeRequest(weather, appStateLiveData)
-        getWeatherFromRemoteSource(weather)
+//        WeatherLoadingService.nativeRequest(weather, appStateLiveData) //старый запрос без ретрофита
+        getWeatherFromRemoteSource(weather) //с ретрофитом
     }
 
     fun getWeatherFromRemoteSource(weather: Weather) {

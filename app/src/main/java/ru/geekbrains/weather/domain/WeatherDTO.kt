@@ -2,6 +2,7 @@ package ru.geekbrains.weather.domain
 
 import ru.geekbrains.weather.R
 import kotlin.math.roundToInt
+import kotlin.time.microseconds
 
 // не очень понял каких комментариев нужно добавить, т.к. API по-сути конструктивно мало чем отличается от яндекса
 // во всяком случае из того набора возможностей, которые я планирую использовать
@@ -26,16 +27,23 @@ data class FactDTO(
 data class ConditionDTO(
     val id: Int?,
     val description: String?,
+    val icon: String?,
 )
 
 data class WeatherDTOConverted(
     private val weatherDTO: WeatherDTO,
     var id: Int = weatherDTO.weather?.get(0)?.id ?: 0,
-    var icon: Int = conditionMap[id] ?: 0,
+    var nativeIconUrl: String = "https://openweathermap.org/img/wn/${weatherDTO.weather?.get(0)?.icon}@2x.png",
+    var customIcon: Int = conditionMap[id] ?: 0,
     var condition: String = weatherDTO.weather?.get(0)?.description.toString(),
-    var temp: String = roundTemp(weatherDTO.main?.temp),
-    var feelsLike: String = roundTemp(weatherDTO.main?.feels_like),
-)
+    var temp: String = formatTemp(weatherDTO.main?.temp),
+    var feelsLike: String = formatTemp(weatherDTO.main?.feels_like),
+) {
+    private fun formatTemp(temp: Double): String {
+        return if (temp > 0) "+$temp"
+        else temp.toString()
+    }
+}
 
 private val conditionMap = mapOf<Int, Int>(
     0 to R.drawable.empty_pixel,
@@ -45,8 +53,10 @@ private val conditionMap = mapOf<Int, Int>(
     804 to R.drawable.ic_overcast,
 )
 
-private fun roundTemp(number: Double?): String {
+private fun formatTemp(number: Double?): String {
     return if (number != null) {
-        ((number * 10.0).roundToInt() / 10.0).toString()
+        val rounded = (number * 10.0).roundToInt() / 10.0
+        if (rounded > 0) "+$rounded"
+        else rounded.toString()
     } else "error"
 }

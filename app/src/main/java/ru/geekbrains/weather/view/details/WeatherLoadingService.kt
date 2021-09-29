@@ -19,7 +19,7 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-private const val OPEN_WEATHER_API_KEY = BuildConfig.OPEN_WEATHER_API_KEY //ключ для проверки 4b552c34f60eb554d5b965a03f98c6f0
+private const val OPEN_WEATHER_API_KEY = BuildConfig.OPEN_WEATHER_API_KEY
 
 object WeatherLoadingService {
 

@@ -1,4 +1,4 @@
-package ru.geekbrains.weather.repository
+package ru.geekbrains.weather.repository.details
 
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.WeatherDTO

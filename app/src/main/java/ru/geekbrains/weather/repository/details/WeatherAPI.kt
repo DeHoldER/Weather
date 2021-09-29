@@ -1,4 +1,4 @@
-package ru.geekbrains.weather.repository
+package ru.geekbrains.weather.repository.details
 
 import retrofit2.Call
 import retrofit2.http.GET

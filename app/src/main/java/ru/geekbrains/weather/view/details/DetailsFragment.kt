@@ -9,10 +9,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import ru.geekbrains.weather.R
-import ru.geekbrains.weather.createAndShow
+import ru.geekbrains.weather.*
 import ru.geekbrains.weather.databinding.FragmentDetailsBinding
 import ru.geekbrains.weather.domain.Weather
+import ru.geekbrains.weather.utils.FOOTER_SVG_URL
+import ru.geekbrains.weather.utils.FOOTER_URL
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.DetailsViewModel
 
@@ -49,6 +50,24 @@ class DetailsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
+            // GLIDE
+            picDetailsFooter.loadImageByUrl(FOOTER_URL)
+
+            // COIL
+            // (можно и обычные картинки подгружать через эти самописные экстеншны, но на всякий случай я их разделил)
+            picDetailsFooterSVG.loadSVG(FOOTER_SVG_URL)
+            icGifLoading.loadGIF(R.drawable.sun_animation)
+
+//            picDetailsFooter.load(FOOTER_URL)
+//            { placeholder(R.drawable.city_bg).error(R.mipmap.ic_world) } //эта хрень работает как-то
+            // не совсем корректно, кроме того, coil почему-то игнорит аргумент match_parent,
+            // поэтому закомментил, но оставил для проверки
+        }
+
+
+
         arguments.let { it?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather() }
             .also { weatherBundle = it }
         with(viewModel) {
@@ -58,7 +77,6 @@ class DetailsFragment : Fragment() {
             updateWeather(weatherBundle)
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun displayWeather(weather: AppState) {
@@ -73,9 +91,11 @@ class DetailsFragment : Fragment() {
                     )
                     with(weather.weatherData) {
                         weatherCondition.text = condition
-                        conditionIcon.setBackgroundResource(icon)
                         temperatureValue.text = temp
                         temperatureFeelsLike.text = feelsLike
+                        if (customIcon != 0) {
+                            conditionIcon.setBackgroundResource(customIcon)
+                        } else conditionIcon.loadImageByUrl(nativeIconUrl)
                     }
                 }
                 toggleLoader()
@@ -110,3 +130,5 @@ class DetailsFragment : Fragment() {
         }
     }
 }
+
+

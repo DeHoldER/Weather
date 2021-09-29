@@ -2,8 +2,8 @@ package ru.geekbrains.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.geekbrains.weather.repository.MainRepository
-import ru.geekbrains.weather.repository.MainRepositoryImpl
+import ru.geekbrains.weather.repository.main.MainRepository
+import ru.geekbrains.weather.repository.main.MainRepositoryImpl
 
 class MainViewModel(
     private val appStateLiveData: MutableLiveData<AppState> = MutableLiveData(),
