@@ -38,12 +38,7 @@ data class WeatherDTOConverted(
     var condition: String = weatherDTO.weather?.get(0)?.description.toString(),
     var temp: String = formatTemp(weatherDTO.main?.temp),
     var feelsLike: String = formatTemp(weatherDTO.main?.feels_like),
-) {
-    private fun formatTemp(temp: Double): String {
-        return if (temp > 0) "+$temp"
-        else temp.toString()
-    }
-}
+)
 
 private val conditionMap = mapOf<Int, Int>(
     0 to R.drawable.empty_pixel,

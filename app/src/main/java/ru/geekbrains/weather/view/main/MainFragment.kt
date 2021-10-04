@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
 
     private fun renderData(appState: AppState) {
         when (appState) {
-            is AppState.Success -> {
+            is AppState.SuccessMain -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
             }

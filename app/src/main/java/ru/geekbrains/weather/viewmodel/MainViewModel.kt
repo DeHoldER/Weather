@@ -19,7 +19,7 @@ class MainViewModel(
 
     private fun getDataFromLocalSource(isRussian: Boolean) {
         appStateLiveData.postValue(
-            AppState.Success(
+            AppState.SuccessMain(
                 if (isRussian)
                     mainRepositoryImpl.getWeatherFromLocalStorageRus()
                 else

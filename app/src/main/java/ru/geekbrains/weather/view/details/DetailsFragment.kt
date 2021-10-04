@@ -75,6 +75,7 @@ class DetailsFragment : Fragment() {
                 displayWeather(it)
             })
             updateWeather(weatherBundle)
+            saveWeather(weatherBundle)
         }
     }
 

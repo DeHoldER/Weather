@@ -4,11 +4,13 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.geekbrains.weather.MyApp.Companion.getHistoryDAO
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.domain.WeatherDTO
 import ru.geekbrains.weather.domain.WeatherDTOConverted
 import ru.geekbrains.weather.repository.details.DetailsRepositoryImpl
 import ru.geekbrains.weather.repository.details.RemoteDataSource
+import ru.geekbrains.weather.repository.history.LocalRepositoryImpl
 import ru.geekbrains.weather.utils.REQUEST_ERROR
 import ru.geekbrains.weather.utils.SERVER_ERROR
 
@@ -16,8 +18,13 @@ class DetailsViewModel(
     private val appStateLiveData: MutableLiveData<AppState> = MutableLiveData(),
     private val detailsRepositoryImpl: DetailsRepositoryImpl = DetailsRepositoryImpl(
         RemoteDataSource()
-    )
+    ),
+    private val historyRepositoryImpl: LocalRepositoryImpl = LocalRepositoryImpl(getHistoryDAO()),
 ) : ViewModel() {
+
+    fun saveWeather(weather: Weather) {
+        historyRepositoryImpl.saveEntity(weather)
+    }
 
     fun getAppState() = appStateLiveData
 
