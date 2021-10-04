@@ -10,11 +10,13 @@ import ru.geekbrains.weather.repository.history.LocalRepositoryImpl
 class HistoryViewModel(
     private val historyLiveData: MutableLiveData<AppState> = MutableLiveData(),
     private val historyRepositoryImpl: LocalRepositoryImpl = LocalRepositoryImpl(MyApp.getHistoryDAO())
-): ViewModel() {
+) : ViewModel() {
 
     fun getAllHistory() {
         historyLiveData.value = AppState.Loading
-        historyLiveData.value = AppState.SuccessHistory(historyRepositoryImpl.getAllHistory())
+        Thread {
+            historyLiveData.postValue(AppState.SuccessHistory(historyRepositoryImpl.getAllHistory()))
+        }.start()
     }
 
     fun getLiveData() = historyLiveData

@@ -11,6 +11,8 @@ class LocalRepositoryImpl(private val localDataSource: HistoryDAO) : LocalReposi
     }
 
     override fun saveEntity(weather: Weather) {
-        localDataSource.insert(convertWeatherToHistoryEntity(weather))
+        Thread {
+            localDataSource.insert(convertWeatherToHistoryEntity(weather))
+        }.start()
     }
 }
