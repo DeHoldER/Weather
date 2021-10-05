@@ -1,4 +1,4 @@
-package ru.geekbrains.weather.view
+package ru.geekbrains.weather.view.activity
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.geekbrains.weather.R
+import ru.geekbrains.weather.contentProvider.ContentProviderFragment
 import ru.geekbrains.weather.view.history.HistoryFragment
 import ru.geekbrains.weather.view.main.MainFragment
 
@@ -65,6 +66,13 @@ class MainActivity : AppCompatActivity() {
             R.id.action_open_fragment_history ->{
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, HistoryFragment.newInstance())
+                    .addToBackStack("")
+                    .commit()
+                true
+            }
+            R.id.action_open_fragment_content_provider ->{
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, ContentProviderFragment.newInstance())
                     .addToBackStack("")
                     .commit()
                 true
