@@ -34,7 +34,8 @@ class RemoteDataSource {
             weather.city.lon,
             OPEN_WEATHER_API_UNITS_METRIC,
             OPEN_WEATHER_API_LANGUAGE_RU,
-            BuildConfig.OPEN_WEATHER_API_KEY
+//            BuildConfig.OPEN_WEATHER_API_KEY
+        "4b552c34f60eb554d5b965a03f98c6f0"
         )
             .enqueue(callback)
     }
