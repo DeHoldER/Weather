@@ -14,6 +14,8 @@ import ru.geekbrains.weather.viewmodel.HistoryViewModel
 
 class HistoryFragment : Fragment() {
 
+    //TODO  было добавить clicklistener элементам во фрагменте HistoryFragment
+
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 

@@ -3,7 +3,8 @@ package ru.geekbrains.weather
 import android.os.Build.VERSION.SDK_INT
 import android.view.View
 import android.widget.ImageView
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
@@ -61,4 +62,14 @@ fun ImageView.loadGIF(imageId: Int) {
         }
         .build()
     this.load(imageId, imageLoader)
+}
+
+fun FragmentManager.showFragment(container: Int, fragment: Fragment, tag: String) {
+    val fragmentA = this.findFragmentByTag(tag)
+    if (fragmentA == null) {
+        this.beginTransaction()
+            .replace(container, fragment, tag)
+            .addToBackStack("")
+            .commit()
+    }
 }

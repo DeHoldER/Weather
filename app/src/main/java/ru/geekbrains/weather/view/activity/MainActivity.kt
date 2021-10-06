@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.contentProvider.ContentProviderFragment
+import ru.geekbrains.weather.showFragment
+import ru.geekbrains.weather.utils.FRAGMENT_CONTAINER
 import ru.geekbrains.weather.view.history.HistoryFragment
 import ru.geekbrains.weather.view.main.MainFragment
 
@@ -57,27 +59,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_screen_menu,menu)
+        menuInflater.inflate(R.menu.main_screen_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.action_open_fragment_history ->{
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, HistoryFragment.newInstance())
-                    .addToBackStack("")
-                    .commit()
+        return when (item.itemId) {
+            R.id.action_open_fragment_history -> {
+                supportFragmentManager.showFragment(
+                    FRAGMENT_CONTAINER, HistoryFragment.newInstance(), "history"
+                )
                 true
             }
-            R.id.action_open_fragment_content_provider ->{
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, ContentProviderFragment.newInstance())
-                    .addToBackStack("")
-                    .commit()
+            R.id.action_open_fragment_content_provider -> {
+                supportFragmentManager.showFragment(
+                    FRAGMENT_CONTAINER, ContentProviderFragment.newInstance(), "contacts"
+                )
                 true
             }
-            else ->super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
