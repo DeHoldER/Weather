@@ -5,6 +5,7 @@
     <string name="txt_temperature_value">Температура:</string>
     <string name="txt_temperature_feels_like">Ощущается как:</string>
     <string name="city_coordinates">lt/ln: %s, %s"</string>
+    <string name="error_message">При загрузке данных с сервера возникла ошибка: \n\n %s"</string>
     <string name="error">Error loading</string>
     <string name="reload">Reload</string>
     <string name="t_success">Success</string>
