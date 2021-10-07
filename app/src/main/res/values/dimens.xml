@@ -6,4 +6,6 @@
     <dimen name="recycler_item_line_margin_end">20dp</dimen>
     <dimen name="fab_margin">15dp</dimen>
     <dimen name="fab_icon_size">56dp</dimen>
+    <dimen name="fab_location_icon_size">45dp</dimen>
+
 </resources>
