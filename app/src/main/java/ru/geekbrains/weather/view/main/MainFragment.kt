@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -68,6 +67,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onDestroy() {
+        _binding = null
         adapter.removeListener()
         super.onDestroy()
     }
@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
         with(binding) {
             mainFragmentRecyclerView.adapter = adapter
             mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
-            mainFragmentFABLocation.setOnClickListener { checkPermission() }
+            mainFragmentFABLocation.setOnClickListener { showCurrentAddress() }
         }
         with(viewModel) {
             getAppState().observe(viewLifecycleOwner, Observer {
@@ -121,14 +121,12 @@ class MainFragment : Fragment() {
         fun onItemViewClick(weather: Weather)
     }
 
-    private fun checkPermission() {
+    private fun showCurrentAddress() {
         activity?.let {
             when {
                 ContextCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) ==
-                        PackageManager.PERMISSION_GRANTED -> {
+                    it, Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED -> {
                     getLocation()
                 }
                 shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)

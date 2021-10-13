@@ -1,5 +1,7 @@
 package ru.geekbrains.weather.lesson10
 
+import android.annotation.SuppressLint
+import android.location.Geocoder
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -14,22 +16,29 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import ru.geekbrains.weather.R
-import ru.geekbrains.weather.databinding.FragmentMainBinding
 import ru.geekbrains.weather.databinding.FragmentMapsBinding
+import ru.geekbrains.weather.databinding.FragmentMapsMainBinding
 
 class MapsFragment : Fragment() {
 
-    private var _binding: FragmentMapsBinding? = null
+    lateinit var map: GoogleMap
+
+    private var _binding: FragmentMapsMainBinding? = null
     private val binding get() = _binding!!
 
     companion object {
         fun newInstance() = MapsFragment()
     }
 
+    @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map = googleMap
+        val startingLocation = LatLng(55.0, 37.0)
+        googleMap.addMarker(MarkerOptions().position(startingLocation).title("Marker in Moscow"))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(startingLocation))
+
+        map.isMyLocationEnabled = true
+        map.uiSettings.isMyLocationButtonEnabled = true
     }
 
     override fun onCreateView(
@@ -37,7 +46,7 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMapsBinding.inflate(inflater, container, false)
+        _binding = FragmentMapsMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -45,5 +54,19 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+        binding.buttonSearch.setOnClickListener {
+            val geocoder = Geocoder(requireContext())
+            val addressRow = binding.searchAddress.text.toString()
+            val address = geocoder.getFromLocationName(addressRow, 1)
+            val location = LatLng(address[0].latitude, address[0].longitude)
+            map.clear()
+            map.addMarker(MarkerOptions().position(location).title("Marker in $location"))
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+        }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }
