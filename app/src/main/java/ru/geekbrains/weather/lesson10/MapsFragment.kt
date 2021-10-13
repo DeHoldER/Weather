@@ -1,6 +1,8 @@
 package ru.geekbrains.weather.lesson10
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import androidx.fragment.app.Fragment
 
@@ -8,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,15 +33,21 @@ class MapsFragment : Fragment() {
         fun newInstance() = MapsFragment()
     }
 
-    @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
         map = googleMap
         val startingLocation = LatLng(55.0, 37.0)
         googleMap.addMarker(MarkerOptions().position(startingLocation).title("Marker in Moscow"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(startingLocation))
 
-        map.isMyLocationEnabled = true
-        map.uiSettings.isMyLocationButtonEnabled = true
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                map.isMyLocationEnabled = true
+                map.uiSettings.isMyLocationButtonEnabled = true
+            }
+        }
+
     }
 
     override fun onCreateView(
