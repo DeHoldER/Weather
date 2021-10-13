@@ -3,6 +3,7 @@ package ru.geekbrains.weather.lesson10
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Geocoder
 import androidx.fragment.app.Fragment
 
@@ -16,8 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.databinding.FragmentMapsBinding
 import ru.geekbrains.weather.databinding.FragmentMapsMainBinding
@@ -25,6 +25,8 @@ import ru.geekbrains.weather.databinding.FragmentMapsMainBinding
 class MapsFragment : Fragment() {
 
     lateinit var map: GoogleMap
+
+    private val markers: ArrayList<Marker?> = arrayListOf()
 
     private var _binding: FragmentMapsMainBinding? = null
     private val binding get() = _binding!!
@@ -48,6 +50,37 @@ class MapsFragment : Fragment() {
             }
         }
 
+        map.setOnMapLongClickListener { location ->
+            addMarker(location)
+            drawLine()
+        }
+
+    }
+
+    private fun addMarker(location: LatLng) {
+        markers.add(
+            map.addMarker(
+                MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_pin))
+                    .position(location)
+                    .title("Marker ${markers.size + 1}")
+            )
+        )
+    }
+
+    private fun drawLine() {
+        val lastMarker = markers.size - 1
+        if (lastMarker > 0) {
+            val startMarker = markers[lastMarker - 1]?.position
+            val endMarker = markers[lastMarker]?.position
+
+            map.addPolyline(
+                PolylineOptions()
+                    .add(startMarker, endMarker)
+                    .color(Color.RED)
+                    .width(15f)
+            )
+        }
     }
 
     override fun onCreateView(
@@ -69,9 +102,13 @@ class MapsFragment : Fragment() {
             val address = geocoder.getFromLocationName(addressRow, 1)
             val location = LatLng(address[0].latitude, address[0].longitude)
             map.clear()
-            map.addMarker(MarkerOptions().position(location).title("Marker in $location"))
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+            moveToPosition(location)
         }
+    }
+
+    private fun moveToPosition(location: LatLng) {
+        map.addMarker(MarkerOptions().position(location).title("Marker in $location"))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
     }
 
     override fun onDestroy() {
