@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.contentProvider.ContentProviderFragment
+import ru.geekbrains.weather.lesson10.MapsFragment
 import ru.geekbrains.weather.showFragment
 import ru.geekbrains.weather.utils.FRAGMENT_CONTAINER
 import ru.geekbrains.weather.view.history.HistoryFragment
@@ -68,6 +69,12 @@ class MainActivity : AppCompatActivity() {
             R.id.action_open_fragment_history -> {
                 supportFragmentManager.showFragment(
                     FRAGMENT_CONTAINER, HistoryFragment.newInstance(), "history"
+                )
+                true
+            }
+            R.id.action_open_fragment_google_maps -> {
+                supportFragmentManager.showFragment(
+                    FRAGMENT_CONTAINER, MapsFragment.newInstance(), "maps"
                 )
                 true
             }

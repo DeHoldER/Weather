@@ -8,7 +8,15 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_open_fragment_google_maps"
+        android:title="Maps"
+        android:icon="@android:drawable/ic_dialog_map"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_open_fragment_content_provider"
         android:title="Provider"
         app:showAsAction="ifRoom" />
+
+
 </menu>
