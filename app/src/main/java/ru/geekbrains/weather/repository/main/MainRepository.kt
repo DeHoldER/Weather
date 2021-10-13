@@ -1,8 +1,8 @@
-package ru.geekbrains.weather.repository
+package ru.geekbrains.weather.repository.main
 
 import ru.geekbrains.weather.domain.Weather
 
-interface Repository {
+interface MainRepository {
 
     fun getWeatherFromServer() : Weather
     fun getWeatherFromLocalStorageRus() : List<Weather>

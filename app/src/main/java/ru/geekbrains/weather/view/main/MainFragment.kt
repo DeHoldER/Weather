@@ -7,13 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import ru.geekbrains.weather.R
 import ru.geekbrains.weather.createAndShow
 import ru.geekbrains.weather.databinding.FragmentMainBinding
 import ru.geekbrains.weather.domain.Weather
-import ru.geekbrains.weather.showSnackBarWithResText
-import ru.geekbrains.weather.showSnackBarWithoutAction
 import ru.geekbrains.weather.view.details.DetailsFragment
 import ru.geekbrains.weather.viewmodel.AppState
 import ru.geekbrains.weather.viewmodel.MainViewModel
@@ -80,10 +77,9 @@ class MainFragment : Fragment() {
 
     private fun renderData(appState: AppState) {
         when (appState) {
-            is AppState.Success -> {
+            is AppState.SuccessMain -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
-                view?.showSnackBarWithResText(R.string.t_success)
             }
             is AppState.Loading -> {
                 binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
