@@ -17,6 +17,7 @@ import ru.geekbrains.weather.showFragment
 import ru.geekbrains.weather.utils.FRAGMENT_CONTAINER
 import ru.geekbrains.weather.view.history.HistoryFragment
 import ru.geekbrains.weather.view.main.MainFragment
+import ru.geekbrains.weather.view.map.WeatherMapFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_open_fragment_google_maps -> {
                 supportFragmentManager.showFragment(
-                    FRAGMENT_CONTAINER, MapsFragment.newInstance(), "maps"
+                    FRAGMENT_CONTAINER, WeatherMapFragment.newInstance(), "maps"
                 )
                 true
             }

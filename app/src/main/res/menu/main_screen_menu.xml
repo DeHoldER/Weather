@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_open_fragment_history"
         android:title="History"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_open_fragment_google_maps"
@@ -16,7 +16,7 @@
     <item
         android:id="@+id/action_open_fragment_content_provider"
         android:title="Provider"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 
 </menu>

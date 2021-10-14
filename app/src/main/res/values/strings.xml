@@ -23,5 +23,6 @@
     <string name="dialog_rationale_decline">Не надо</string>
     <string name="dialog_address_title">Ваш адрес</string>
     <string name="dialog_address_get_weather">Узнать погоду</string>
+    <string name="t_weather_on_map">Погода на карте</string>
 
 </resources>

@@ -203,8 +203,7 @@ class MainFragment : Fragment() {
             AlertDialog.Builder(it)
                 .setTitle(title)
                 .setMessage(message)
-                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog,
-                                                                              _ ->
+                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .create()

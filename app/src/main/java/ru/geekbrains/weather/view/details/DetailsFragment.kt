@@ -40,6 +40,7 @@ class DetailsFragment : Fragment() {
 
         fun newInstance(bundle: Bundle): DetailsFragment =
             DetailsFragment().apply { arguments = bundle }
+
     }
 
     override fun onDestroy() {
