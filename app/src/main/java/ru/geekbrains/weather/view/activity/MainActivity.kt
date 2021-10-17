@@ -1,7 +1,5 @@
 package ru.geekbrains.weather.view.activity
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,16 +7,15 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
+import com.google.firebase.messaging.FirebaseMessaging
 import ru.geekbrains.weather.R
-import ru.geekbrains.weather.appservices.AppNotificationService
 import ru.geekbrains.weather.contentProvider.ContentProviderFragment
-import ru.geekbrains.weather.lesson10.MapsFragment
 import ru.geekbrains.weather.showFragment
 import ru.geekbrains.weather.utils.FRAGMENT_CONTAINER
 import ru.geekbrains.weather.view.history.HistoryFragment
@@ -47,14 +44,18 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        val appNotificationService = AppNotificationService(this).apply {
-            showNotification(
-                CHANNEL_ID_1,
-                "Заголовок 1",
-                "Вот такое вот замечательное сообщение 1",
-                NotificationCompat.PRIORITY_MAX,
-                1
-            )
+//        val appNotificationService = AppNotificationService(this).apply {
+//            showNotification(
+//                CHANNEL_ID_1,
+//                "Заголовок 1",
+//                "Вот такое вот замечательное сообщение 1",
+//                NotificationCompat.PRIORITY_MAX,
+//                1
+//            )
+//        }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { it ->
+            if (it.isSuccessful) Log.d("myLogs", it.result.toString())
         }
     }
 

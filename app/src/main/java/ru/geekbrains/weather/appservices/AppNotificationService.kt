@@ -7,7 +7,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import ru.geekbrains.weather.R
-import ru.geekbrains.weather.view.activity.MainActivity
 
 const val CHANNEL_ID_1 = "CHANNEL_ID_1"
 const val CHANNEL_ID_2 = "CHANNEL_ID_2"
@@ -32,7 +31,9 @@ const val PRIORITY_MAX = 4
 //public static final int PRIORITY_MAX = 2;
 
 
-class AppNotificationService(private val activity: MainActivity) {
+class AppNotificationService(private val context: Context) {
+
+    private val notificationIDs = mutableListOf<Int>()
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun convertPriority(priority: Int, isSDKHigh: Boolean): Int {
@@ -58,7 +59,7 @@ class AppNotificationService(private val activity: MainActivity) {
     }
 
     private val notificationManager =
-        activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun showNotification(
@@ -66,10 +67,10 @@ class AppNotificationService(private val activity: MainActivity) {
         title: String,
         message: String,
         priority: Int,
-        messageID: Int
+        messageID: Int = notificationIDs.size
     ) {
 
-        val notificationBuilder = NotificationCompat.Builder(activity, channelID)
+        val notificationBuilder = NotificationCompat.Builder(context, channelID)
             .apply {
                 setSmallIcon(R.drawable.ic_map_marker)
                 setContentTitle(title)
@@ -89,6 +90,7 @@ class AppNotificationService(private val activity: MainActivity) {
             notificationManager.createNotificationChannel(notification)
         }
         notificationManager.notify(messageID, notificationBuilder.build())
+        notificationIDs.add(notificationIDs.size)
 
     }
 
