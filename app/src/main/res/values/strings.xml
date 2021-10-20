@@ -1,11 +1,32 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="app_version">FREE</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_temperature_value">Температура:</string>
     <string name="txt_temperature_feels_like">Ощущается как:</string>
     <string name="city_coordinates">lt/ln: %s, %s"</string>
+    <string name="error_message">При загрузке данных с сервера возникла ошибка: \n\n %s"</string>
     <string name="error">Error loading</string>
     <string name="reload">Reload</string>
     <string name="t_success">Success</string>
+
+    <!--GEOLOCATION-->
+    <string name="dialog_button_close">Закрыть</string>
+    <string name="dialog_title_no_gps">Доступ к геолокации закрыт</string>
+    <string name="dialog_message_no_gps">Разрешите доступ к геолокации, если хотите узнать погоду текущего места</string>
+    <string name="dialog_title_gps_turned_off">GPS отключён</string>
+    <string name="dialog_message_last_location_unknown">Местонахождение неизвестно. Включите GPS, если хотите получить погоду по текущему адресу</string>
+    <string name="dialog_message_last_known_location">Показана последняя известная локация. Включите GPS, если хотите обновить местонахождение</string>
+    <string name="dialog_rationale_title">Доступ к геолокации</string>
+    <string name="dialog_rationale_meaasge">Объяснение</string>
+    <string name="dialog_rationale_give_access">Предоставить доступ</string>
+    <string name="dialog_rationale_decline">Не надо</string>
+    <string name="dialog_address_title">Ваш адрес</string>
+    <string name="dialog_address_get_weather">Узнать погоду</string>
+    <string name="t_weather_on_map">Погода на карте</string>
+    <string name="upgrade_to_pro_message">Этот функционал доступен только на версии PRO</string>
+    <string name="error_to_find_address">Адрес не найден. Попробуйте изменить запрос</string>
+
 </resources>

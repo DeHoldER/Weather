@@ -2,7 +2,10 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'com.google.gms.google-services'
 }
+
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdk 30
@@ -17,11 +20,53 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        Properties properties = new Properties()
+        properties.load(rootProject.file("password.properties").newDataInputStream())
+        def storeFileName = properties.getProperty("storeFileName")
+        def password = properties.getProperty("password")
+        def aliasName = properties.getProperty("aliasName")
+        release {
+            storeFile file(storeFileName)
+            storePassword = password
+            keyAlias aliasName
+            keyPassword = password
+        }
+
+        alpha {
+//            initWith debug
+            storeFile file(storeFileName)
+            storePassword = password
+            keyAlias aliasName
+            keyPassword = password
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-release"
+            buildConfigField "String", "BUILD_TYPE", '"RELEASE"'
         }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-debug"
+            buildConfigField "String", "BUILD_TYPE", '"DEBUG"'
+        }
+
+        alpha {
+//            initWith debug
+            signingConfig signingConfigs.alpha
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-alpha"
+            buildConfigField "String", "BUILD_TYPE", '"ALPHA"'
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -34,16 +79,56 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions 'version'
+    productFlavors {
+        free {
+            dimension 'version'
+        }
+        pro {
+            dimension 'version'
+        }
+    }
+
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("apikey.properties").newDataInputStream())
+        def apiKey = properties.getProperty("openWeatherApiKey", "")
+        it.buildConfigField "String", "OPEN_WEATHER_API_KEY", apiKey
+    }
 }
 
 dependencies {
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    implementation 'androidx.core:core-ktx:1.6.0'
+    // UI
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+
+    // GLIDE
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    // COIL
+    implementation("io.coil-kt:coil:1.3.2")
+    implementation("io.coil-kt:coil-svg:1.3.2")
+    implementation("io.coil-kt:coil-gif:1.3.2")
+
+    // ROOM
+    implementation 'androidx.room:room-runtime:2.3.0'
+    kapt 'androidx.room:room-compiler:2.3.0'
+
+    // GOOGLE SERVICES (MAPS)
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging-ktx:22.0.0'
+
+    implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
