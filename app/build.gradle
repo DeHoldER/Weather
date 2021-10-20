@@ -23,18 +23,20 @@ android {
     signingConfigs {
         Properties properties = new Properties()
         properties.load(rootProject.file("password.properties").newDataInputStream())
+        def storeFileName = properties.getProperty("storeFileName")
         def password = properties.getProperty("password")
+        def aliasName = properties.getProperty("aliasName")
         release {
-            storeFile file("1423.jks")
+            storeFile file(storeFileName)
             storePassword = password
-            keyAlias "alias_1423"
+            keyAlias aliasName
             keyPassword = password
         }
 
         pro {
-            storeFile file("1423.jks")
+            storeFile file(storeFileName)
             storePassword = password
-            keyAlias "alias_1423"
+            keyAlias aliasName
             keyPassword = password
         }
     }
