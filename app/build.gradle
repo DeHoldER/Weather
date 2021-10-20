@@ -20,11 +20,49 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        Properties properties = new Properties()
+        properties.load(rootProject.file("password.properties").newDataInputStream())
+        def password = properties.getProperty("password")
+        release {
+            storeFile file("1423.jks")
+            storePassword = password
+            keyAlias "alias_1423"
+            keyPassword = password
+        }
+
+        pro {
+            storeFile file("1423.jks")
+            storePassword = password
+            keyAlias "alias_1423"
+            keyPassword = password
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-release"
+            buildConfigField "String", "BUILD_TYPE", '"RELEASE"'
         }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-debug"
+            buildConfigField "String", "BUILD_TYPE", '"DEBUG"'
+        }
+
+        pro {
+            signingConfig signingConfigs.pro
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            versionNameSuffix "-pro"
+            buildConfigField "String", "BUILD_TYPE", '"PRO"'
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

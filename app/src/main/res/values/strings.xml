@@ -24,5 +24,7 @@
     <string name="dialog_address_title">Ваш адрес</string>
     <string name="dialog_address_get_weather">Узнать погоду</string>
     <string name="t_weather_on_map">Погода на карте</string>
+    <string name="upgrade_to_pro_message">Этот функционал доступен только на версии PRO</string>
+    <string name="error_to_find_address">Адрес не найден. Попробуйте изменить запрос</string>
 
 </resources>

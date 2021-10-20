@@ -1,10 +1,7 @@
 package ru.geekbrains.weather.view.map
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
 import androidx.fragment.app.Fragment
@@ -22,18 +19,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_details.*
-import kotlinx.android.synthetic.main.fragment_main.*
-import ru.geekbrains.weather.R
-import ru.geekbrains.weather.databinding.FragmentMapsBinding
+import ru.geekbrains.weather.*
 import ru.geekbrains.weather.databinding.FragmentMapsMainBinding
 import ru.geekbrains.weather.domain.City
 import ru.geekbrains.weather.domain.Weather
-import ru.geekbrains.weather.showFragment
 import ru.geekbrains.weather.utils.FRAGMENT_CONTAINER
 import ru.geekbrains.weather.view.details.DetailsFragment
-import java.io.IOException
 
 class WeatherMapFragment : Fragment() {
 
@@ -79,24 +70,35 @@ class WeatherMapFragment : Fragment() {
 
         map.setOnMapLongClickListener { location ->
 //            addMarker(location)
-            requireActivity().supportFragmentManager.showFragment(
-                FRAGMENT_CONTAINER,
-                DetailsFragment.newInstance(Bundle().apply {
-                    putParcelable(
-                        DetailsFragment.BUNDLE_EXTRA,
-                        Weather(
-                            City(
-                                //TODO: Вынести бизнес-логику туда, где ей место
-                                //TODO: Объединить этот код с запросом адреса у геокодера и выводить вместо "погода на карте" название города
-                                name = getString(R.string.t_weather_on_map),
-                                lat = location.latitude,
-                                lon = location.longitude
+
+            val appVersion = ru.geekbrains.weather.BuildConfig.BUILD_TYPE
+
+            if (appVersion == "PRO") {
+
+                requireActivity().supportFragmentManager.showFragment(
+                    FRAGMENT_CONTAINER,
+                    DetailsFragment.newInstance(Bundle().apply {
+                        putParcelable(
+                            DetailsFragment.BUNDLE_EXTRA,
+                            Weather(
+                                City(
+                                    //TODO: Вынести бизнес-логику туда, где ей место
+                                    //TODO: Объединить этот код с запросом адреса у геокодера и выводить вместо "погода на карте" название города
+                                    name = getString(R.string.t_weather_on_map),
+                                    lat = location.latitude,
+                                    lon = location.longitude
+                                )
                             )
                         )
-                    )
-                }),
-                "details"
-            )
+                    }),
+                    "details"
+                )
+
+            } else {
+                view?.showSnackBarWithResText(R.string.upgrade_to_pro_message)
+            }
+
+
         }
     }
 
@@ -129,9 +131,11 @@ class WeatherMapFragment : Fragment() {
             val geocoder = Geocoder(requireContext())
             val addressRow = binding.searchAddress.text.toString()
             val address = geocoder.getFromLocationName(addressRow, 1)
-            val location = LatLng(address[0].latitude, address[0].longitude)
-            map.clear()
-            moveToPosition(location)
+            if (address.size > 0) {
+                val location = LatLng(address[0].latitude, address[0].longitude)
+                map.clear()
+                moveToPosition(location)
+            } else view.showSnackBarWithResText(R.string.error_to_find_address)
         }
     }
 

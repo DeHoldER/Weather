@@ -14,3 +14,5 @@
 .cxx
 local.properties
 /apikey.properties
+password.properties
+app/1423.jks
