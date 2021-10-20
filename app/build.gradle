@@ -33,7 +33,8 @@ android {
             keyPassword = password
         }
 
-        pro {
+        alpha {
+//            initWith debug
             storeFile file(storeFileName)
             storePassword = password
             keyAlias aliasName
@@ -57,12 +58,13 @@ android {
             buildConfigField "String", "BUILD_TYPE", '"DEBUG"'
         }
 
-        pro {
-            signingConfig signingConfigs.pro
+        alpha {
+//            initWith debug
+            signingConfig signingConfigs.alpha
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix "-pro"
-            buildConfigField "String", "BUILD_TYPE", '"PRO"'
+            versionNameSuffix "-alpha"
+            buildConfigField "String", "BUILD_TYPE", '"ALPHA"'
         }
 
     }
@@ -76,6 +78,16 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    flavorDimensions 'version'
+    productFlavors {
+        free {
+            dimension 'version'
+        }
+        pro {
+            dimension 'version'
+        }
     }
 
     buildTypes.each {

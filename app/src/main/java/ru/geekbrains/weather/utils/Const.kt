@@ -16,3 +16,8 @@ const val FOOTER_URL2 = "https://freepngimg.com/thumb/city/36275-3-city-hd.png"
 const val FOOTER_SVG_URL = "https://svgsilh.com/svg/151380.svg"
 
 const val FRAGMENT_CONTAINER = R.id.fragment_container
+
+
+//APP VERSIONS
+const val VERSION_PRO = "PRO"
+const val VERSION_FREE = "FREE"

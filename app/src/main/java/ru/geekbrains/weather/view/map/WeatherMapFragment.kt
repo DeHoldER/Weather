@@ -24,6 +24,7 @@ import ru.geekbrains.weather.databinding.FragmentMapsMainBinding
 import ru.geekbrains.weather.domain.City
 import ru.geekbrains.weather.domain.Weather
 import ru.geekbrains.weather.utils.FRAGMENT_CONTAINER
+import ru.geekbrains.weather.utils.VERSION_PRO
 import ru.geekbrains.weather.view.details.DetailsFragment
 
 class WeatherMapFragment : Fragment() {
@@ -71,9 +72,8 @@ class WeatherMapFragment : Fragment() {
         map.setOnMapLongClickListener { location ->
 //            addMarker(location)
 
-            val appVersion = ru.geekbrains.weather.BuildConfig.BUILD_TYPE
-
-            if (appVersion == "PRO") {
+            val appVersion = getString(R.string.app_version)
+            if (appVersion == VERSION_PRO) {
 
                 requireActivity().supportFragmentManager.showFragment(
                     FRAGMENT_CONTAINER,
